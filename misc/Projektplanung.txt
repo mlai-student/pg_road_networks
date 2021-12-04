@@ -1,0 +1,129 @@
+Thema 4: Generierung einer Datenbank von Straßennetzwerken
+
+Aufgaben:
+    - Einarbeitung in das OSMnx Paket
+    - Auswahl von möglichen Eigenschaften:
+        -> Anzahl der Graphen
+        -> Städte eines bestimmten Landes, einer bestimmten Größe
+        -> Minimale, maximale Größe, Kantenanzahl
+        -> Minimaler Durchmesser der Graphen, maximaler Knotengrad
+
+    - Sinnvolle Bereinigung der Daten
+    - Auswahl von Knoten und Graph Labeln:
+        -> Graphlabel: Einwohnergröße, Land
+        -> Knotenlabel: Daten aus Openstreetmap (z.B. gibt es eine Bushaltestelle nahe zur Knotenposition)
+
+
+Ziel:
+    - Implementierung eines Programms, das je nach angegebenen Eigenschaften, eine
+      Graphdatenbank von verschiedenen Straßennetzwerken mit den angegebenen Eigenschaften
+      erstellt (gelabelte Knote, gelabelte Graphen)
+
+
+
+Was muss alles geklärt werden???
+
+-> Wie werden die Daten gespeichert?
+    -> Werden sie direkt weiterverarbeitet
+    -> Datenbank im Sinne von SQL
+    -> Keine richtige "Datenbank" sondern in einer Datei
+        -> JSON, GraphML, ...
+
+-> Sollen die Graphen zufällig erzeugt werden, oder soll nach Angabe von z.B Land und Größe
+   So viele Graphen erzeugt werden, wie möglich aber höchstens so viele, wie angegeben
+
+-> Was ist der Durchmesser eines Graphen ("Geographisch vom Mittelpunkt"??)
+    -> nach Wolfram Math World ist es die Länge des "längsten kürzesten Pfad"
+
+-> Was bedeutet bereinigen der Daten:
+    -> Soll der Graph dann eventuell passend gemacht werden, indem Knoten/Kanten gelöscht
+        werden?
+
+
+
+Für den ersten Vortrag:
+-> Funktionalität von OSMnx grob beschreiben (1. Teil)
+    -> Dass man sachen aus open Street maps rausziehen kann
+    -> Overpass Api
+    -> Beispiel zum Beispiel Biergärten, oder Restaurants
+
+-> 2. Teil: Plan davon geben, wie unser Programm am Ende aussehen soll
+    -> Was ist unser weiteres Vorgehen
+    -> Wie stellen wir uns vor, was das nachher kann
+
+
+Das Ziel des Projekts:
+    -> Beispiel: 100 Graphen ca. 10000 Knoten, 20000 Kanten
+        -> Verschiedene Regionen nehmen
+
+    -> Anforderungen erstmal auf Städte Datenbank einschränken
+
+    -> Wenn eine Zahl kommt, zufällig
+
+    -> Speichern als GraphML
+
+
+
+Erster Teil: (ungelabelt)
+    -> Graphen bis zu bestimmter Größe, bzw. ab bestimmter Größe (bzgl. Knoten / Kantenzahl)
+        -> Stadtliste durchgehen und passende Graphen anschauen
+        -> nacher evtl. Graphen passend machen
+
+
+        Wenn man 10 Graphen daraus zufällig nimmt, wie sind die Eigenschaften des Graphen
+            -> Knotenzahl, Kantenzahl, Verteilung der Grade
+
+        -> Wenn man aus großen Graphen kleinen Graphen machen möchte, dann zum Beipiel von zufälligen Knoten
+            Breitensuche, bis Eigenschaft erfüllt
+
+
+        1. Aufgabe
+        Liste an Städten der Länder durchgehen:
+        Dann zufällig Knoten aus Graphen nehmen, und dann Breitensuche, bis Graphgröße erreicht
+
+        Vielleicht könntet ihr das so machen, dass man sagt:
+            Ich nehme n zufällige Graphen und mache k mal die Breitensuche pro Graphen
+
+Zweiter Teil: (gelabelt)
+    -> Feature set (Bushaltestellen, etc)
+    -> Jeder Knoten besitzt Feature Vektor in {0,1}^n, der angibt, ob Feature erfüllt ist
+        -> Zum Beispiel eine 1, wenn in der Nähe des Knoten eine 1 ist
+
+    
+    Man generiert Graphen, wie in 1, aber jetzt gibt man noch einen Vector von Strings mit und
+    fragt in der API und dann den Feature Vector erstellen (wobei in der Nähe evtl. mitgegeben wird)
+
+
+ ------------------------------------------ Besprechung 03.12.2021 ------------------------------------------
+
+ Wäre cool, wenn man nachher Graphen klassifizieren kann.
+ -> Graphen sollen gleiche Anzahl an Knoten / Kanten haben, um die Graphen nicht direkt an der Anzahl der Knoten klassifiziert werden können
+    -> Also erstmal nur Knoten und vielleicht auch nur Kanten. (Also das ihr sagt, ich höre auf, wenn ich die so und so vielte Kante gefunden habe)
+
+-> Datenbank sollten Files sein mit den Graphen und dem Label
+    -> Das Label soll die Stadt sein, aus der wir den Graphen gezogen haben
+    -> Knoten oder Kanten und die passenden Städte dazu wären die ersten Parameter, die man angeben kann
+
+-> Zu den Labeln
+    -> erstmal zu Knoten labeln, wie viele Restaurants an einem Knoten liegen (so ähnlich, wie nearest neighbour)
+    -> für jeden Knoten Wert mit Anzahl an Restaurants
+    -> als zweite Abfrage Bushaltestelle und die als Zähler zu den Knoten, etc...
+    -> Museum, Apotheke, Casino, etc...
+
+    -> Eingabe: Liste mit Amenities mit |Liste| dimensionaler Label Vektor
+
+    !!! Nicht unsere Aufgabe - Dient aber als Input dafür, warum wir das machen !!!
+    1. Aufgabe: Graphvorhersage
+    2. Aufgabe: Knotenvorhersage
+
+
+    -> Optionen, wie Restuarants zählen, oder nur boolean flag
+        -> also, dass optionale sachen kommen
+
+    
+
+    Was dann noch schön wäre, dass ihr nach dem Erzeugen noch ein bisschen Statistik führen könntet
+        -> Angenommen, ihr habt fixe Knoten, dass ihr dann zeigen könntet:
+            -> Auswertung über die Kantenanzahl
+            -> Länge der gesamten Straßen
+            -> Geographische Kennzahlen
