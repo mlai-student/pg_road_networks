@@ -35,19 +35,14 @@ Das Projekt macht starken Gebrauch von den Python Bibliotheken:
 
 Um das Programm ausführen zu können, muss mindestens Python 3 sowie folgenden Bibliotheken installiert sein.
 ```  
-* pyside2 ~=5.13.2
-* osmnx ~=1.1.1
-* networkx ~=2.7
-* geopandas ~=0.10.2
-* matplotlib ~=3.5.1
-* shapely ~=1.8.0
-* descartes ~=1.1.0
-* pandas ~=1.4.1
-* overpy ~=0.6
-* numpy ~=1.22.2
-* rtree ~=0.9.7
-* pygeos ~=0.12.0
-* pyproj ~=3.3.0
+* pyside2~=5.13.2
+* osmnx~=1.1.1
+* networkx~=2.7
+* numpy~=1.22.2
+* shapely~=1.8.0
+* pyproj~=3.3.0
+* pandas~=1.4.1
+* geopandas~=0.10.2
 ```
 
 ---
